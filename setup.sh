@@ -47,11 +47,11 @@ sed -i 's/^# DBPassword=/DBPassword=password/' /etc/zabbix/zabbix_server.conf
 sed -i 's/^;date.timezone =/date.timezone = Asia\/Ho_Chi_Minh/' /etc/php/7.4/apache2/php.ini
 
 # Configure Zabbix User
-sed -i 's/^memory_limit = .*/memory_limit = 128M/' /etc/php/7.4/apache2/php.ini
-sed -i 's/^upload_max_filesize = .*/upload_max_filesize = 8M/' /etc/php/7.4/apache2/php.ini
-sed -i 's/^post_max_size = .*/post_max_size = 16M/' /etc/php/7.4/apache2/php.ini
-sed -i 's/^max_execution_time = .*/max_execution_time = 300/' /etc/php/7.4/apache2/php.ini
-sed -i 's/^max_input_time = .*/max_input_time = 300/' /etc/php/7.4/apache2/php.ini
+sed -i 's/^memory_limit = .*/memory_limit = 128M/' /etc/php/8.3/apache2/php.ini
+sed -i 's/^upload_max_filesize = .*/upload_max_filesize = 8M/' /etc/php/8.3/apache2/php.ini
+sed -i 's/^post_max_size = .*/post_max_size = 16M/' /etc/php/8.3/apache2/php.ini
+sed -i 's/^max_execution_time = .*/max_execution_time = 300/' /etc/php/8.3/apache2/php.ini
+sed -i 's/^max_input_time = .*/max_input_time = 300/' /etc/php/8.3/apache2/php.ini
 
 # Restart services
 systemctl restart zabbix-server zabbix-agent apache2
