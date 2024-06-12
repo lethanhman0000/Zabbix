@@ -44,7 +44,7 @@ zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-charact
 sed -i 's/^# DBPassword=/DBPassword=password/' /etc/zabbix/zabbix_server.conf
 
 # Configure PHP for Zabbix frontend
-sed -i 's/^;date.timezone =/date.timezone = Asia\/Ho_Chi_Minh/' /etc/php/7.4/apache2/php.ini
+sed -i 's/^;date.timezone =/date.timezone = Asia\/Ho_Chi_Minh/' /etc/php/8.3/apache2/php.ini
 
 # Configure Zabbix User
 sed -i 's/^memory_limit = .*/memory_limit = 128M/' /etc/php/8.3/apache2/php.ini
