@@ -63,6 +63,3 @@ ufw allow 443/tcp
 ufw allow 10050/tcp
 ufw allow 10051/tcp
 ufw reload
-
-echo "Trong may cua ban co tronscipt cua tui dua vao roi do, tim va xoa no di!!:))"
-
