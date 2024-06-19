@@ -42,7 +42,7 @@ dpkg -i zabbix-release_7.0-1+ubuntu24.04_all.deb
 apt-get update
 
 # Install Zabbix server, frontend, agent
-apt install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent
+apt-get install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent -y
 
 # Import initial schema and data for Zabbix server
 zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
