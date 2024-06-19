@@ -22,12 +22,19 @@ systemctl start mariadb
 systemctl enable mariadb
 
 # Secure MariaDB installation
-mysql_secure_installation
-
+MYSQL_ROOT_PASSWORD="123456"
+mysql --user=root --password="$MYSQL_ROOT_PASSWORD" <<EOF
+ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
+DELETE FROM mysql.user WHERE User='';
+DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+DROP DATABASE IF EXISTS test;
+DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+FLUSH PRIVILEGES;
+EOF
 # Create Zabbix database and user
-mysql -u root -p -e "CREATE DATABASE zabbix character set utf8 collate utf8_bin;"
-mysql -u root -p -e "GRANT ALL PRIVILEGES ON zabbix.* TO zabbix@'localhost' IDENTIFIED BY '123456';"
-mysql -u root -p -e "FLUSH PRIVILEGES;"
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "CREATE DATABASE zabbix character set utf8 collate utf8_bin;"
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON zabbix.* TO zabbix@'localhost' IDENTIFIED BY '123456';"
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"
 
 # Install Zabbix repository
 wget https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_7.0-1+ubuntu24.04_all.deb
