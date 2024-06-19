@@ -7,17 +7,11 @@ apt-get -y upgrade
 # Set the timezone
 timedatectl set-timezone Asia/Ho_Chi_Minh
 
-# Install Apache
-apt-get -y install apache2
+# Install PHP and required extensions
+apt-get install mariadb-server mariadb-client apache2 php php-mysql php-bcmath php-intl php-mbstring php-gd php-xml php-ldap php-zip php-fpm -y
+systemctl restart apache2
 systemctl start apache2
 systemctl enable apache2
-
-# Install PHP and required extensions
-apt-get -y install php php-mysql php-bcmath php-mbstring php-gd php-xml php-ldap php-zip php-fpm
-systemctl restart apache2
-
-# Install MariaDB
-apt-get -y install mariadb-server mariadb-client
 systemctl start mariadb
 systemctl enable mariadb
 
@@ -32,23 +26,24 @@ DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
 FLUSH PRIVILEGES;
 EOF
 # Create Zabbix database and user
-mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "CREATE DATABASE zabbix character set utf8 collate utf8_bin;"
-mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON zabbix.* TO zabbix@'localhost' IDENTIFIED BY '123456';"
-mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "create database zabbix character set utf8mb4 collate utf8mb4_bin;"
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "create user 'zabbix'@'localhost' identified by '123456';"
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "grant all privileges on zabbix.* to 'zabbix'@'localhost';"
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "set global log_bin_trust_function_creators = 1;"
 
 # Install Zabbix repository
 wget https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_7.0-1+ubuntu24.04_all.deb
 dpkg -i zabbix-release_7.0-1+ubuntu24.04_all.deb
-apt-get update
 
 # Install Zabbix server, frontend, agent
 apt-get install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent -y
 
 # Import initial schema and data for Zabbix server
 zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "set global log_bin_trust_function_creators = 0;"
 
 # Configure Zabbix server
-sed -i 's/^# DBPassword=/DBPassword=password/' /etc/zabbix/zabbix_server.conf
+sed -i 's/^# DBPassword=/DBPassword=123456/' /etc/zabbix/zabbix_server.conf
 
 # Configure PHP for Zabbix frontend
 sed -i 's/^;date.timezone =/date.timezone = Asia\/Ho_Chi_Minh/' /etc/php/8.3/apache2/php.ini
