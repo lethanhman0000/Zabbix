@@ -39,11 +39,9 @@ systemctl start mysql
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "create database zabbix character set utf8mb4 collate utf8mb4_bin;"
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "create user 'zabbix'@'localhost' identified by '123456';"
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "grant all privileges on zabbix.* to 'zabbix'@'localhost';"
-mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "set global log_bin_trust_function_creators = 1;"
 
 # Import initial schema and data for Zabbix server
-zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
-mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "set global log_bin_trust_function_creators = 0;"
+zcat /usr/share/doc/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
 
 # Configure Zabbix server
 sed -i 's/^# DBPassword=/DBPassword=123456/' /etc/zabbix/zabbix_server.conf
