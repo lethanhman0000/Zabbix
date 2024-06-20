@@ -41,7 +41,7 @@ mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "create user 'zabbix'@'localhost' iden
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "grant all privileges on zabbix.* to 'zabbix'@'localhost';"
 
 # Import initial schema and data for Zabbix server
-zcat /usr/share/doc/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
+zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
 
 # Configure Zabbix server
 sed -i 's/^# DBPassword=/DBPassword=123456/' /etc/zabbix/zabbix_server.conf
