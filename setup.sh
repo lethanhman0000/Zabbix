@@ -24,7 +24,6 @@ systemctl enable mariadb
 
 # Secure MariaDB installation
 MYSQL_ROOT_PASSWORD="123456"
-mysql_secure_installation
 mysql --user=root --password="$MYSQL_ROOT_PASSWORD" <<EOF
 ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
 DELETE FROM mysql.user WHERE User='';
