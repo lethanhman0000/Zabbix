@@ -13,24 +13,23 @@ sudo apt-get install -y wget gnupg2 lsb-release
 # Download Zabbix repository package
 wget https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_7.0-1+ubuntu24.04_all.deb
 
-# Install the Zabbix repository package
-sudo apt-get install ./zabbix-release_7.0-1+ubuntu24.04_all.deb
+apt-get install ./zabbix-release_7.0-1+ubuntu24.04_all.deb
 
 # Update package index
-sudo apt-get update
+apt-get update
 
 # Install Zabbix server, frontend, and agent
-sudo apt-get install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-agent
+apt-get install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-agent
 
 # Install MariaDB
-sudo apt-get install mariadb-server
+apt-get install mariadb-server
 
 # Start and enable MariaDB service
-sudo systemctl start mariadb
-sudo systemctl enable mariadb
+systemctl start mariadb
+systemctl enable mariadb
 
 # Secure MariaDB installation
-sudo mysql_secure_installation
+mysql_secure_installation
 
 # Create Zabbix database and user
 mysql -u root -p <<EOF
@@ -45,22 +44,18 @@ EOF
 zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p'123456' zabbix
 
 # Update Zabbix server configuration file
-sudo sed -i 's/# DBPassword=/DBPassword=123456/' /etc/zabbix/zabbix_server.conf
+sed -i 's/# DBPassword=/DBPassword=123456/' /etc/zabbix/zabbix_server.conf
 
 # Set timezone in PHP configuration for Zabbix
-echo "php_value[date.timezone] = Asia/Ho_Chi_Minh" | sudo tee /etc/php/7.4/apache2/conf.d/99-zabbix.ini
+sed -i 's/;date.timezone =.*/date.timezone = Asia\/Ho_Chi_Minh/' /etc/php/8.3/apache2/conf.d/99-zabbix.ini
 
 # Restart Zabbix server, agent, and Apache to apply changes
-sudo systemctl restart zabbix-server zabbix-agent apache2
+systemctl restart zabbix-server zabbix-agent apache2
 
 # Enable Zabbix server, agent, and Apache to start at boot
-sudo systemctl enable zabbix-server zabbix-agent apache2
+systemctl enable zabbix-server zabbix-agent apache2
 
 # Open firewall ports for Zabbix
-sudo ufw allow 80/tcp
-sudo ufw allow 10051/tcp
-sudo ufw enable
-
-# Output success message
-echo "Zabbix installation and configuration completed successfully."
-echo "Access Zabbix web interface at http://your_server_ip/zabbix"
+ufw allow 80/tcp
+ufw allow 10051/tcp
+ufw enable
