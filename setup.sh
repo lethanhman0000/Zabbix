@@ -13,7 +13,7 @@ apt-get install ./zabbix-release_7.0-1+ubuntu24.04_all.deb
 apt-get update
 
 # Install Zabbix server, frontend, and agent
-apt-get install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-agent -y
+apt-get install zabbix-sql-scripts zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-agent mariadb-server mariadb-client apache2 php php-mysql php-bcmath php-intl php-mbstring php-gd php-xml php-ldap php-zip php-fpm -y
 
 # Install MariaDB
 apt-get install mariadb-server -y
@@ -35,11 +35,11 @@ EOF
 
 # Create Zabbix database and user
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "CREATE DATABASE zabbix character set utf8 collate utf8_bin;"
-mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "CREATE USER 'zabbix'@'localhost' IDENTIFIED BY 'your_password';"
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "CREATE USER 'zabbix'@'localhost' IDENTIFIED BY '123456';"
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';"
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"
 # Import initial schema and data for Zabbix server
-zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p'123456' zabbix
+zcat /usr/share/doc/zabbix-server-mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p"123456" zabbix
 
 # Update Zabbix server configuration file
 sed -i 's/# DBPassword=/DBPassword=123456/' /etc/zabbix/zabbix_server.conf
