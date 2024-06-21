@@ -154,14 +154,13 @@ systemctl start apache2
 systemctl enable apache2
 systemctl start mariadb
 systemctl enable mariadb
+
+apt-get install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent mysql-servver -y
+systemctl start mysql
 # Install Zabbix repository
 wget https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_7.0-1+ubuntu24.04_all.deb
 dpkg -i zabbix-release_7.0-1+ubuntu24.04_all.deb
 apt update
-
-# Install Zabbix server, frontend, agent
-apt-get install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent mysql-servver -y
-systemctl start mysql
 
 # Create Zabbix database and user
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "create database zabbix character set utf8mb4 collate utf8mb4_bin;"
