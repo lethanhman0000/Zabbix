@@ -39,13 +39,10 @@ mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "CREATE USER 'zabbix'@'localhost' IDEN
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';"
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"
 # Import initial schema and data for Zabbix server
-zcat /usr/share/doc/zabbix-server-mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p"123456" zabbix
+zcat /usr/share/doc/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p"123456" zabbix
 
 # Update Zabbix server configuration file
 sed -i 's/# DBPassword=/DBPassword=123456/' /etc/zabbix/zabbix_server.conf
-
-# Set timezone in PHP configuration for Zabbix
-sed -i 's/;date.timezone =.*/date.timezone = Asia\/Ho_Chi_Minh/' /etc/php/8.3/apache2/conf.d/99-zabbix.ini
 
 # Restart Zabbix server, agent, and Apache to apply changes
 systemctl restart zabbix-server zabbix-agent apache2
